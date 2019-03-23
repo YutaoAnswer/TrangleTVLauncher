@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="com.trigtop.gb.view.MainActivity">
+        <activity android:name="com.trigtop.gb.view.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,6 +24,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".view.MainActivity"/>
+        <activity android:name=".view.ContentActivity"/>
     </application>
 
 </manifest>

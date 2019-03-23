@@ -3,6 +3,7 @@ package com.trigtop.gb.view;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.trigtop.gb.util.DateUtil;
 import com.trigtop.gb.widget.DrawingOrderRelativeLayout;
 import com.trigtop.gb.widget.MainUpView;
 import com.trigtop.gb.widget.MaulCarouselAdapter;
+import com.trigtop.gb.widget.MetroItemFrameLayout;
 import com.trigtop.gb.widget.MetroViewBorderHandler;
 import com.trigtop.gb.widget.MetroViewBorderImpl;
 import com.trigtop.gb.widget.TvRecyclerView;
@@ -32,6 +34,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends Activity {
 
@@ -50,6 +53,30 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int MSG_ONE = 1;
+    @BindView(R.id.view10)
+    MetroItemFrameLayout view10;
+    @BindView(R.id.view11)
+    MetroItemFrameLayout view11;
+    @BindView(R.id.view)
+    MetroItemFrameLayout view;
+    @BindView(R.id.view4)
+    MetroItemFrameLayout view4;
+    @BindView(R.id.view2)
+    MetroItemFrameLayout view2;
+    @BindView(R.id.view3)
+    MetroItemFrameLayout view3;
+    @BindView(R.id.view5)
+    MetroItemFrameLayout view5;
+    @BindView(R.id.view6)
+    MetroItemFrameLayout view6;
+    @BindView(R.id.view12)
+    MetroItemFrameLayout view12;
+    @BindView(R.id.view13)
+    MetroItemFrameLayout view13;
+    @BindView(R.id.view7)
+    MetroItemFrameLayout view7;
+    @BindView(R.id.view8)
+    MetroItemFrameLayout view8;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -145,6 +172,8 @@ public class MainActivity extends Activity {
         GridLayoutManager manager = new GridLayoutManager(this, 1);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         manager.supportsPredictiveItemAnimations();
+        tvRecyclerView.setHasFixedSize(true);
+        tvRecyclerView.setNestedScrollingEnabled(false);
         tvRecyclerView.setLayoutManager(manager);
         int itemSpace = getResources().
                 getDimensionPixelSize(R.dimen.recyclerView_item_space1);
@@ -201,6 +230,56 @@ public class MainActivity extends Activity {
             default:
                 break;
         }
+    }
+
+    @OnClick({R.id.view10, R.id.view11, R.id.view, R.id.view4, R.id.view2,
+            R.id.view3, R.id.view5, R.id.view6, R.id.view12, R.id.view13, R.id.view7, R.id.view8})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.view10:
+                LaunchActivity();
+                break;
+            case R.id.view11:
+                LaunchActivity();
+                break;
+            case R.id.view:
+                LaunchActivity();
+                break;
+            case R.id.view4:
+                LaunchActivity();
+                break;
+            case R.id.view2:
+                LaunchActivity();
+                break;
+            case R.id.view3:
+                LaunchActivity();
+                break;
+            case R.id.view5:
+                LaunchActivity();
+                break;
+            case R.id.view6:
+                LaunchActivity();
+                break;
+            case R.id.view12:
+                LaunchActivity();
+                break;
+            case R.id.view13:
+                LaunchActivity();
+                break;
+            case R.id.view7:
+                LaunchActivity();
+                break;
+            case R.id.view8:
+                LaunchActivity();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void LaunchActivity() {
+        Intent intent = new Intent(this, ContentActivity.class);
+        startActivity(intent);
     }
 
 
