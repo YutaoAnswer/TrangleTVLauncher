@@ -14,8 +14,8 @@ public class ContantUtil {
             R.drawable.pic8};
 
     public static String[] TEST_DATAS = {"A", "B", "C", "D", "E", "F", "G",
-    "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "A", "B", "C", "D", "E", "F", "G",
-            "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R"};
+    "H", "I", "J", "K", "LogUtil", "M", "N", "O", "P", "Q", "R", "A", "B", "C", "D", "E", "F", "G",
+            "H", "I", "J", "K", "LogUtil", "M", "N", "O", "P", "Q", "R"};
 
     static int getRandColor() {
         Random random = new Random();

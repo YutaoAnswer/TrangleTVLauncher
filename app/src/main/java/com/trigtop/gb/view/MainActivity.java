@@ -3,40 +3,64 @@ package com.trigtop.gb.view;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
+import android.provider.Settings;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trigtop.gb.R;
-import com.trigtop.gb.util.ContantUtil;
+import com.trigtop.gb.adapt.ShortcutsAdapter;
+import com.trigtop.gb.bean.Shortcut;
+import com.trigtop.gb.newyahooweather.NewYahooWeather;
+import com.trigtop.gb.util.AnimUtil;
+import com.trigtop.gb.util.DBHelper;
+import com.trigtop.gb.util.Data;
 import com.trigtop.gb.util.DateUtil;
+import com.trigtop.gb.util.LogUtil;
+import com.trigtop.gb.util.Util;
+import com.trigtop.gb.util.WeatherUtils;
 import com.trigtop.gb.widget.DrawingOrderRelativeLayout;
+import com.trigtop.gb.widget.GridViewTV;
 import com.trigtop.gb.widget.MainUpView;
-import com.trigtop.gb.widget.MaulCarouselAdapter;
 import com.trigtop.gb.widget.MetroItemFrameLayout;
 import com.trigtop.gb.widget.MetroViewBorderHandler;
 import com.trigtop.gb.widget.MetroViewBorderImpl;
-import com.trigtop.gb.widget.TvRecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import zh.wang.android.apis.yweathergetter4a.WeatherInfo;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity
+        implements AdapterView.OnItemSelectedListener, View.OnFocusChangeListener {
 
     @BindView(R.id.mainUpView)
     MainUpView mainUpView;
@@ -48,11 +72,8 @@ public class MainActivity extends Activity {
     TextView tvTime;
     @BindView(R.id.tv_date)
     TextView tvDate;
-    @BindView(R.id.tv_recycler_view)
-    TvRecyclerView tvRecyclerView;
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int MSG_ONE = 1;
+    //    @BindView(R.id.tv_recycler_view)
+//    TvRecyclerView tvRecyclerView;
     @BindView(R.id.view10)
     MetroItemFrameLayout view10;
     @BindView(R.id.view11)
@@ -77,6 +98,54 @@ public class MainActivity extends Activity {
     MetroItemFrameLayout view7;
     @BindView(R.id.view8)
     MetroItemFrameLayout view8;
+    @BindView(R.id.fragment_home_gridview)
+    GridViewTV gridViewTV;
+
+    private View mOldView;
+    private PackageManager pm;
+    private float scale = 1.1f;
+    private boolean isSelect = false;
+    private ShortcutsAdapter mAdapter;
+    private static final int MSG_ONE = 1;
+    private static final int MSG_ZERO = 0;
+    public static final int columns = 11;
+    private String mCurrentCategory = Data.HOME;
+    private WeatherReceiver mWeatherReceiver;
+    private final String ADDITIONAL = "additional";
+    private List<Shortcut> mShortcut = new ArrayList<>();
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.actiivty_main);
+        ButterKnife.bind(this);
+        initView();
+        initDatebase();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+        registerBroadcast();
+        getWeatherAtonResume();
+    }
+
+    private void registerBroadcast() {
+        mWeatherReceiver = new WeatherReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mWeatherReceiver, intentFilter);
+    }
+
+    public void setCurrentCategory(String category) {
+        mCurrentCategory = category;
+    }
+
+    public String getmCurrentCategory() {
+        return mCurrentCategory;
+    }
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -88,16 +157,37 @@ public class MainActivity extends Activity {
                 case MSG_ONE:
                     setDateTimeWeek();
                     break;
+                case MSG_ZERO:
+                    if (isSelect) {
+                        isSelect = false;
+                    } else {
+                        // 如果是第一次进入该gridView，则进入第一个item，如果不是第一次进去，则选择上次出来的item
+                        if (mOldView == null) {
+                            mOldView = gridViewTV.getChildAt(0);
+                            if (mOldView != null) {
+                                AnimUtil.setViewScale(mOldView, scale);
+                            }
+                        } else {
+                            AnimUtil.setViewScale(mOldView, scale);
+                        }
+                    }
+                    break;
             }
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.actiivty_main);
-        ButterKnife.bind(this);
-        initView();
+    private void initDatebase() {
+        //db
+        int lastDatabaseVersion = Util.getInt(this, Data.PRE_DB_VERSION);//获取上一版本数据库如果第一次装是0
+        final int newDatabaseVersion = Util.getNewDatabaseVersion(this, Data.PRE_DB_VERSION);//获取xml里设置的数据库版本
+        if (lastDatabaseVersion < newDatabaseVersion) {
+            new Thread() {
+                public void run() {
+                    Util.copyDatabaseFromAssert(MainActivity.this, newDatabaseVersion);//顺便把数据库版本set进去
+                    Util.copyWallpaperFromAssert(MainActivity.this);
+                }
+            }.start();
+        }
     }
 
     private void initView() {
@@ -116,6 +206,8 @@ public class MainActivity extends Activity {
                 } while (true);
             }
         }).start();
+
+        aaa = Util.getString(MainActivity.this, WeatherUtils.WEATHER_CITY);
 
         setDateTimeWeek();
 
@@ -169,26 +261,59 @@ public class MainActivity extends Activity {
             }
         });
 
-        GridLayoutManager manager = new GridLayoutManager(this, 1);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        manager.supportsPredictiveItemAnimations();
-        tvRecyclerView.setHasFixedSize(true);
-        tvRecyclerView.setNestedScrollingEnabled(false);
-        tvRecyclerView.setLayoutManager(manager);
-        int itemSpace = getResources().
-                getDimensionPixelSize(R.dimen.recyclerView_item_space1);
-        tvRecyclerView.addItemDecoration(new SpaceItemDecoration(itemSpace));
-        DefaultItemAnimator animator = new DefaultItemAnimator();
-        tvRecyclerView.setItemAnimator(animator);
-        final MaulCarouselAdapter mAdapter = new MaulCarouselAdapter(this);
-        tvRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemStateListener(new MaulCarouselAdapter.OnItemStateListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(MainActivity.this, ContantUtil.TEST_DATAS[position],
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+//        GridLayoutManager manager = new GridLayoutManager(this, 1);
+//        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        manager.supportsPredictiveItemAnimations();
+//        tvRecyclerView.setHasFixedSize(true);
+//        tvRecyclerView.setNestedScrollingEnabled(false);
+//        tvRecyclerView.setLayoutManager(manager);
+//        int itemSpace = getResources().
+//                getDimensionPixelSize(R.dimen.recyclerView_item_space1);
+//        tvRecyclerView.addItemDecoration(new SpaceItemDecoration(itemSpace));
+//        DefaultItemAnimator animator = new DefaultItemAnimator();
+//        tvRecyclerView.setItemAnimator(animator);
+//        final MaulCarouselAdapter mAdapter = new MaulCarouselAdapter(this);
+//        tvRecyclerView.setAdapter(mAdapter);
+//        mAdapter.setOnItemStateListener(new MaulCarouselAdapter.OnItemStateListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                ShortcutsAdapter.ShortcutHolder holder = (ShortcutsAdapter.ShortcutHolder) view.getTag();
+//                ComponentName componentName = holder.componentName;
+//                if (ADDITIONAL.equals(componentName.getPackageName())) {
+//                    Intent editIntent = new Intent(MainActivity.this, EditorActivity.class);
+//                    editIntent.putExtra(Util.CATEGORY, mCurrentCategory)
+//                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(editIntent);
+//                } else {
+//                    try {
+//                        Intent mainintent = new Intent(Intent.ACTION_MAIN, null);
+//                        mainintent.addCategory(Intent.CATEGORY_LAUNCHER);
+//                        mainintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//                        mainintent.setComponent(componentName);
+//                        startActivity(mainintent);
+//                    } catch (Exception e) {
+//                        LogUtil.e("error", "FolderActivitty.ItemClickListener.onItemClick() startActivity failed: " + componentName);
+//                    }
+//                }
+//            }
+//        });
+
+        pm = MainActivity.this.getPackageManager();
+        mAdapter = new ShortcutsAdapter(MainActivity.this, mShortcut, pm, false);
+        gridViewTV.setAdapter(mAdapter);
+        gridViewTV.setNumColumns(columns);
+        gridViewTV.setOnItemClickListener(new ItemClickListener());
+        gridViewTV.setOnItemSelectedListener(this);
+        gridViewTV.setOnFocusChangeListener(this);
+    }
+
+    private void getData() {
+        mShortcut.clear();
+        mShortcut.addAll(DBHelper.getInstance(this).queryByCategory(mCurrentCategory));
+        Shortcut forAddItem = new Shortcut();
+        forAddItem.setComponentName(ADDITIONAL);
+        mShortcut.add(forAddItem);
+        mAdapter.notifyDataSetChanged(mShortcut);
     }
 
     /**
@@ -236,52 +361,121 @@ public class MainActivity extends Activity {
             R.id.view3, R.id.view5, R.id.view6, R.id.view12, R.id.view13, R.id.view7, R.id.view8})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.view10:
-                LaunchActivity();
+            case R.id.view10://weather
+                showEditCityForWeatherDialog();
                 break;
-            case R.id.view11:
-                LaunchActivity();
+            case R.id.view11://clean
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view:
-                LaunchActivity();
+            case R.id.view://Apps
+                LaunchActivity(new AppActicity());
                 break;
-            case R.id.view4:
-                LaunchActivity();
+            case R.id.view4://online_video
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view2:
-                LaunchActivity();
+            case R.id.view2://browser
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view3:
-                LaunchActivity();
+            case R.id.view3://music
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view5:
-                LaunchActivity();
+            case R.id.view5://local_video
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view6:
-                LaunchActivity();
+            case R.id.view6://images
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view12:
-                LaunchActivity();
+            case R.id.view12://gone
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view13:
-                LaunchActivity();
+            case R.id.view13://gone
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view7:
-                LaunchActivity();
+            case R.id.view7://待定
+                LaunchActivity(new ContentActivity());
                 break;
-            case R.id.view8:
-                LaunchActivity();
+            case R.id.view8://setting
+                Intent settingIntent = new Intent();
+                settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ComponentName mComp = new ComponentName(getString(R.string.setting_pkg), getString(R.string.setting_main_activity));
+                settingIntent.setComponent(mComp);
+                try {
+                    startActivity(settingIntent);
+                } catch (Exception e) {
+                    settingIntent = new Intent(Settings.ACTION_SETTINGS);
+                    startActivity(settingIntent);
+                }
                 break;
             default:
                 break;
         }
     }
 
-    private void LaunchActivity() {
-        Intent intent = new Intent(this, ContentActivity.class);
+    Runnable run = new Runnable() {
+        @Override
+        public void run() {
+            handler.sendEmptyMessage(0);
+        }
+    };
+
+    private void LaunchActivity(Activity activity) {
+        Intent intent = new Intent(this, activity.getClass());
         startActivity(intent);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (view != null && gridViewTV.hasFocus()) {
+            isSelect = true;
+            AnimUtil.setViewScale(view, scale);
+            if (mOldView != null)
+                AnimUtil.setViewScaleDefault(mOldView);
+        }
+        mOldView = view;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus) {
+            new Thread(run).start();
+        } else {
+            if (mOldView != null) {
+                AnimUtil.setViewScaleDefault(mOldView);
+            }
+            isSelect = false;
+        }
+    }
+
+
+    /**
+     * handle the icon click event
+     */
+    private class ItemClickListener implements AdapterView.OnItemClickListener {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            ShortcutsAdapter.ShortcutHolder holder = (ShortcutsAdapter.ShortcutHolder) arg1.getTag();
+            ComponentName componentName = holder.componentName;
+            if (ADDITIONAL.equals(componentName.getPackageName())) {
+                Intent editIntent = new Intent(MainActivity.this, EditorActivity.class);
+                editIntent.putExtra(Util.CATEGORY, mCurrentCategory)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(editIntent);
+            } else {
+                try {
+                    Intent mainintent = new Intent(Intent.ACTION_MAIN, null);
+                    mainintent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    mainintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                    mainintent.setComponent(componentName);
+                    startActivity(mainintent);
+                } catch (Exception e) {
+                    LogUtil.e("error", "FolderActivitty.ItemClickListener.onItemClick() startActivity failed: " + componentName);
+                }
+            }
+        }
+    }
 
     private class SpaceItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -295,6 +489,153 @@ public class MainActivity extends Activity {
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                    RecyclerView.State state) {
             outRect.left = space;
+        }
+    }
+
+
+    String aaa = "";
+
+    public void initWeather() {
+        ConnectivityManager connManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connManager.getActiveNetworkInfo() != null) {
+            if (!connManager.getActiveNetworkInfo().isConnected()) return;
+            Timer mTimer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, aaa);
+                }
+            };
+            try {
+                mTimer.schedule(task, 2000, 1000 * 60 * 60 * 3);//do it after 10 seconds , per 3 hours do it again
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+
+        }
+    }
+
+    private void getWeatherAtonResume() {
+        if (!GET_WEATHER_OK) {
+            ConnectivityManager connManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connManager.getActiveNetworkInfo() != null) {
+                if (!connManager.getActiveNetworkInfo().isConnected()) return;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, aaa);
+                    }
+                }).start();
+            }
+        }
+    }
+
+    private TextView weather_city1;
+    private TextView weather_info1;
+    private ImageView weather_image1;
+    private static int mWeatherCode = 3200;
+    private TextView weathrer_temperature1;
+    private static boolean GET_WEATHER_OK = false;
+
+    @SuppressLint("HandlerLeak")
+    private Handler mUpdateWeatherHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case WeatherUtils.MSG_WEATHER_OK_NEW: {
+                    NewYahooWeather weatherInfo = (NewYahooWeather) msg.obj;
+                    if (weather_city1 != null && weather_image1 != null && weatherInfo != null) {
+                        mWeatherCode = (int) weatherInfo.getCode();
+                        int temp = (int) ((weatherInfo.getTemp() - 32) / 1.8);
+                        weathrer_temperature1.setText(temp + "ºC");
+                        weather_city1.setText(weatherInfo.getCity());
+                        weather_info1.setText(weatherInfo.getDesc());
+                        weathrer_temperature1.setVisibility(View.VISIBLE);
+                        if (mWeatherCode >= 0 && mWeatherCode <= 47) {
+                            weather_image1.setImageResource(Data.getWeatherIcon(mWeatherCode));//设置通过weathercode设置已经在本地的天气图片
+                        } else {
+                            weather_image1.setImageResource(R.mipmap.weather3200);
+                        }
+                        GET_WEATHER_OK = true;
+                    } else {
+                        if (weather_city1 != null && weather_image1 != null) {
+                            // weather_city1.setText("Sunny to cloudy");
+                            //   weathrer_temperature1.setText("28");
+                            //  weather_info1.setText("走到这里");
+                            initWeather();
+                        }
+                    }
+                }
+                break;
+                case WeatherUtils.MSG_WEATHER_NO_CITY: {
+                    if (weather_city1 != null) weather_city1.setText(R.string.weather_no_city);
+                    //  Util.setString(getActivity(), WeatherUtils.WEATHER_CITY, "empty");
+                    break;
+                }
+                case WeatherUtils.MSG_WEATHER_OK: {
+                    WeatherInfo weatherInfo = (WeatherInfo) msg.obj;
+                    if (weather_city1 != null && weather_image1 != null && weatherInfo != null) {
+                        mWeatherCode = weatherInfo.getCurrentCode();
+                        int temp = (int) ((weatherInfo.getCurrentTemp() - 32) / 1.8);
+                        weathrer_temperature1.setText(temp + "ºC");
+                        weather_city1.setText(weatherInfo.getLocationCity());
+                        weather_info1.setText(weatherInfo.getCurrentText());
+                        weathrer_temperature1.setVisibility(View.VISIBLE);
+                        if (mWeatherCode >= 0 && mWeatherCode <= 47) {
+                            weather_image1.setImageResource(Data.getWeatherIcon(mWeatherCode));//设置通过weathercode设置已经在本地的天气图片
+                        } else {
+                            weather_image1.setImageResource(R.mipmap.weather3200);
+                        }
+                        GET_WEATHER_OK = true;
+                    } else {
+                        if (weather_city1 != null && weather_image1 != null) {
+                            // weather_city1.setText("Sunny to cloudy");
+                            //   weathrer_temperature1.setText("28");
+                            //  weather_info1.setText("走到这里");
+                            initWeather();
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
+    public void showEditCityForWeatherDialog() {
+        final EditText editor = new EditText(this);
+        editor.setSingleLine();
+        new AlertDialog.Builder(this).setTitle(R.string.weather_edit_city_dialog_tips).setIcon(android.R.drawable.ic_dialog_info).setView(editor).setPositiveButton(R.string.weather_edit_city_dialog_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String _location = editor.getText().toString();
+                if (!TextUtils.isEmpty(_location)) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editor.getWindowToken(), 0);
+                    WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, _location);
+                    Util.setString(MainActivity.this, WeatherUtils.WEATHER_CITY, _location);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.weather_edit_city_dialog_not_empty, Toast.LENGTH_LONG).show();
+                }
+            }
+        }).show();
+    }
+
+    private class WeatherReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                GET_WEATHER_OK = false;
+                initWeather();
+            }
         }
     }
 }

@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">TVSample</string>
+    <string name="setting_pkg">com.android.tv.settings</string>
+    <string name="setting_main_activity">com.android.tv.settings.MainSettings</string>
+    <string name="shortcut_out_of_range">Shortcuts out of range!</string>
+
+    <!--weather-->
+    <string name="weather_edit_city_dialog_not_empty">Make sure your input is correct!</string>
+    <string name="weather_edit_city_dialog_tips">Input your city name</string>
+    <string name="weather_edit_city_dialog_ok">OK</string>
+    <string name="weather_no_city">No City</string>
+
 </resources>

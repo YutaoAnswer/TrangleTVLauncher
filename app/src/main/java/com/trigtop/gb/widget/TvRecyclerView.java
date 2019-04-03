@@ -77,7 +77,6 @@ public class TvRecyclerView extends RecyclerView {
     private boolean mIsNeedMoved = false;
     int mLayerType = View.LAYER_TYPE_SOFTWARE;
 
-
     public TvRecyclerView(Context context) {
         this(context, null);
     }

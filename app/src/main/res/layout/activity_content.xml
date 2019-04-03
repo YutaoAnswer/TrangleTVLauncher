@@ -1,15 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_id_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="@drawable/main_bg"
+    android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="第二个页面"
-        android:textColor="@color/colorAccent"
-        android:textSize="30sp" />
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="30dp"
+        android:textSize="30dp" />
 
-</LinearLayout>
+    <com.trigtop.gb.widget.GridViewTV
+        android:id="@+id/folder_id_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginRight="@dimen/content_margin_right"
+        android:columnWidth="10dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:listSelector="@drawable/gridview_item_focus"
+        android:numColumns="9"
+        android:paddingLeft="@dimen/home_margin_columns"
+        android:paddingTop="10dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
+
+</RelativeLayout>

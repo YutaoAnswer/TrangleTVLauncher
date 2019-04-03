@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/main_bg"
+    android:layout_height="match_parent">
+
+    <com.trigtop.gb.widget.MyGridView
+        android:id="@+id/gv_shortcut_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:cacheColorHint="@android:color/transparent"
+        android:drawSelectorOnTop="false"
+        android:horizontalSpacing="2dp"
+        android:numColumns="6"
+        android:scrollbars="none"
+        android:verticalSpacing="2dp"/>
+
+</RelativeLayout>

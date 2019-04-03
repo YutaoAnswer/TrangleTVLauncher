@@ -21,4 +21,13 @@
     <color name="deepPurple">#673ab7</color>
     <color name="purple">#9c27b0</color>
 
+    <color name="blue">#009CFF</color>
+    <color name="none">#00000000</color>
+    <color name="black">#000000</color>
+    <color name="dialog_window_transparent">#50000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_gray">#a0969696</color>
+    <color name="appBackground">#303030</color>
+
+
 </resources>

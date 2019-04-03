@@ -11,8 +11,8 @@
     <com.trigtop.gb.widget.MainUpView
         android:id="@+id/mainUpView"
         android:layout_width="wrap_content"
-        android:visibility="gone"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:upImageRes="@drawable/rectangle" />
 
     <!--顶部状态栏-->
@@ -76,6 +76,7 @@
 
     <!--内容-->
     <com.trigtop.gb.widget.SmoothHorizontalScrollView
+        android:id="@+id/SmoothHorizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -103,6 +104,7 @@
                 android:focusable="true"
                 app:radius="4dp">
 
+                <!--天气-->
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -127,6 +129,7 @@
                 android:focusable="true"
                 app:radius="4dp">
 
+                <!--清理-->
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -145,6 +148,7 @@
                 android:focusable="true"
                 app:radius="4dp">
 
+                <!--全部应用-->
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -152,15 +156,15 @@
                     android:src="@drawable/ic_post_1" />
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="start"-->
-                    <!--android:tag="top"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:tag="top"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -169,7 +173,7 @@
                     android:background="@drawable/border_down_shape"
                     android:gravity="center|start"
                     android:padding="15px"
-                    android:text="魔兽"
+                    android:text="apps"
                     android:textColor="@color/white"
                     android:textSize="18dp" />
             </com.trigtop.gb.widget.MetroItemFrameLayout>
@@ -194,16 +198,16 @@
                     android:src="@drawable/ic_post_2" />
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="start"-->
-                    <!--android:paddingLeft="5dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -212,7 +216,7 @@
                     android:background="@drawable/border_down_shape"
                     android:gravity="center|start"
                     android:padding="15px"
-                    android:text="大海鱼棠"
+                    android:text="online_video"
                     android:textColor="@color/white"
                     android:textSize="18dp" />
             </com.trigtop.gb.widget.MetroItemFrameLayout>
@@ -242,16 +246,16 @@
 
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="start"-->
-                    <!--android:paddingLeft="5dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -260,7 +264,7 @@
                     android:background="@drawable/border_down_shape"
                     android:gravity="center|start"
                     android:padding="15px"
-                    android:text="极品飞车"
+                    android:text="browser"
                     android:textColor="@color/white"
                     android:textSize="18dp" />
             </com.trigtop.gb.widget.MetroItemFrameLayout>
@@ -287,16 +291,16 @@
                     android:src="@drawable/ic_post_4" />
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="start"-->
-                    <!--android:paddingLeft="5dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -305,7 +309,7 @@
                     android:background="@drawable/border_down_shape"
                     android:gravity="center|start"
                     android:padding="15px"
-                    android:text="蜘蛛侠"
+                    android:text="music"
                     android:textColor="@color/white"
                     android:textSize="18dp" />
             </com.trigtop.gb.widget.MetroItemFrameLayout>
@@ -334,16 +338,16 @@
                     android:src="@drawable/ic_post_5" />
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="left"-->
-                    <!--android:paddingLeft="5dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="left"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -352,7 +356,7 @@
                     android:background="@drawable/border_down_shape"
                     android:gravity="center|start"
                     android:padding="15px"
-                    android:text="忍着神龟2."
+                    android:text="local_video."
                     android:textColor="@color/white"
                     android:textSize="18dp" />
 
@@ -381,16 +385,16 @@
                     android:src="@drawable/ic_post_6" />
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="start"-->
-                    <!--android:paddingLeft="5dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -399,7 +403,7 @@
                     android:background="@drawable/border_down_shape"
                     android:gravity="center|start"
                     android:padding="15px"
-                    android:text="马里奥"
+                    android:text="images"
                     android:textColor="@color/white"
                     android:textSize="18dp" />
 
@@ -408,6 +412,7 @@
             <com.trigtop.gb.widget.MetroItemFrameLayout
                 android:id="@+id/view12"
                 android:layout_width="208dp"
+                android:visibility="gone"
                 android:layout_height="200dp"
                 android:layout_alignBaseline="@+id/view"
                 android:layout_alignTop="@+id/view"
@@ -429,16 +434,16 @@
                     android:src="@drawable/ic_post_7" />
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="start"-->
-                    <!--android:paddingLeft="5dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -447,7 +452,7 @@
                     android:background="@drawable/border_down_shape"
                     android:gravity="center|start"
                     android:padding="15px"
-                    android:text="绝地求生"
+                    android:text="images"
                     android:textColor="@color/white"
                     android:textSize="18dp" />
 
@@ -462,6 +467,7 @@
                 android:layout_alignBottom="@+id/view"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
+                android:visibility="gone"
                 android:layout_marginRight="5dp"
                 android:layout_toEndOf="@+id/view12"
                 android:background="@drawable/border_shape"
@@ -476,16 +482,16 @@
                     android:src="@drawable/ic_post_8" />
 
                 <!--<com.trigtop.gb.widget.CornerVew-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="start"-->
-                    <!--android:paddingLeft="5dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--cv:cv_background_color="#5EB335"-->
-                    <!--cv:cv_fill_triangle="true"-->
-                    <!--cv:cv_gravity="TOP_LEFT"-->
-                    <!--cv:cv_text="VIP"-->
-                    <!--cv:cv_text_size="15sp" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="start"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--cv:cv_background_color="#5EB335"-->
+                <!--cv:cv_fill_triangle="true"-->
+                <!--cv:cv_gravity="TOP_LEFT"-->
+                <!--cv:cv_text="VIP"-->
+                <!--cv:cv_text_size="15sp" />-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -516,6 +522,7 @@
                 android:focusable="true"
                 app:radius="4dp">
 
+                <!--File Explorer-->
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -540,6 +547,7 @@
                 android:focusable="true"
                 app:radius="4dp">
 
+                <!--设置-->
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -553,22 +561,28 @@
 
     </com.trigtop.gb.widget.SmoothHorizontalScrollView>
 
-    <!--底部-->
-    <!--<com.trigtop.gb.widget.SmoothHorizontalScrollView-->
+    <!--<com.trigtop.gb.widget.TvRecyclerView-->
+        <!--android:id="@+id/tv_recycler_view"-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:paddingStart="40dp"-->
+        <!--android:paddingTop="50dp"-->
+        <!--app:isAutoProcessFocus="false"-->
+        <!--app:scrollMode="followScroll"-->
+        <!--tools:ignore="RtlSymmetry" />-->
 
-        <com.trigtop.gb.widget.TvRecyclerView
-            android:id="@+id/tv_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="50dp"
-            android:paddingStart="40dp"
-            app:isAutoProcessFocus="false"
-            android:layout_gravity="bottom"
-            app:scrollMode="followScroll"
-            tools:ignore="RtlSymmetry" />
-
-    <!--</com.trigtop.gb.widget.SmoothHorizontalScrollView>-->
+    <com.trigtop.gb.widget.GridViewTV
+        android:id="@+id/fragment_home_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="true"
+        android:horizontalSpacing="10dp"
+        android:listSelector="@drawable/gridview_item_focus"
+        android:nextFocusLeft="@id/fragment_home_gridview"
+        android:paddingTop="50dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="40dp"
+        android:verticalSpacing="10dp" />
 
 </LinearLayout>

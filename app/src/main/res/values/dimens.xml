@@ -8,4 +8,16 @@
     <dimen name="recyclerview_item_height">110dp</dimen>
     <dimen name="recyclerView_item_space1">4dp</dimen>
     <dimen name="recyclerview_item_width1">128dp</dimen>
+
+    <dimen name="item_apps_layout_width">90dp</dimen>
+    <dimen name="item_apps_layout_height">90dp</dimen>
+    <dimen name="home_text_size_small">15sp</dimen>
+    <dimen name="shotcut_item_padding">10dp</dimen>
+    <dimen name="shotcut_item_layout_width">75dp</dimen>
+    <dimen name="shotcut_item_icon_width">50dp</dimen>
+    <dimen name="shotcut_item_icon_height">50dp</dimen>
+    <dimen name="content_margin_right">150dp</dimen>
+    <dimen name="home_margin_columns">10dp</dimen>
+    <dimen name="home_margin_between_text_and_image">5dp</dimen>
+
 </resources>
