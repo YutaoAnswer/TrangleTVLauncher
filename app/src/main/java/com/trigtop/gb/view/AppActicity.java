@@ -206,5 +206,9 @@ public class AppActicity extends Activity implements AdapterView.OnItemLongClick
         return true;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_up_in, R.anim.activity_up_out);
+    }
 }

@@ -72,7 +72,7 @@ public class WeatherUtils {
 //			mYahooWeather.setNeedDownloadIcons(true);
 //			mYahooWeather.setSearchMode(SEARCH_MODE.PLACE_NAME);
 //			mYahooWeather.queryYahooWeatherByPlaceName(activity,
-//					city, new WeatherUpdater(weatherHandler));
+//					city, new WeatherUpdater(weatherHandler)) ;
 			new NewYahooWeatherHandler(weatherHandler , city).execute();
 		} else {
 			weatherHandler.sendEmptyMessage(MSG_WEATHER_NO_CITY);

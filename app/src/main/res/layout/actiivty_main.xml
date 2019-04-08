@@ -135,7 +135,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="start|center_vertical"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_vip_tv" />
+                    android:src="@drawable/ic_clean" />
 
             </com.trigtop.gb.widget.MetroItemFrameLayout>
 
@@ -553,7 +553,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="start|center_vertical"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_variety" />
+                    android:src="@drawable/ic_setting" />
 
             </com.trigtop.gb.widget.MetroItemFrameLayout>
 
@@ -583,6 +583,8 @@
         android:paddingTop="50dp"
         android:paddingBottom="10dp"
         android:paddingStart="40dp"
-        android:verticalSpacing="10dp" />
+        android:paddingEnd="20dp"
+        android:verticalSpacing="10dp"
+        tools:ignore="RtlSymmetry" />
 
 </LinearLayout>

@@ -238,7 +238,7 @@ public class EditorActivity extends Activity implements AdapterView.OnItemSelect
             ViewHolder holder = (ViewHolder) arg1.getTag();
             if (mFitterMode) {//选中模式
                 boolean visible = holder.selectView.getVisibility() == View.VISIBLE;
-                if (mCurrentCategory.equals(Data.HOME) && !visible && DBHelper.getInstance(mContext).queryByCategory(Data.HOME).size() >= ContentActivity.columns -1) {
+                if (mCurrentCategory.equals(Data.HOME) && !visible && DBHelper.getInstance(mContext).queryByCategory(Data.HOME).size() >= MainActivity.columns -1) {
                     Toast.makeText(mContext, mContext.getResources().getString(R.string.shortcut_out_of_range), Toast.LENGTH_LONG).show();
                     return;
                 }

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
@@ -48,5 +50,6 @@ public class LauncherActivity extends Activity implements MediaPlayer.OnCompleti
     public void onCompletion(MediaPlayer mp) {
         Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }

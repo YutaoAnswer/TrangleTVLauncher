@@ -10,6 +10,7 @@
         android:layout_centerHorizontal="true"
         android:cacheColorHint="@android:color/transparent"
         android:drawSelectorOnTop="false"
+        android:layout_margin="@dimen/d_10dp"
         android:horizontalSpacing="2dp"
         android:numColumns="6"
         android:scrollbars="none"

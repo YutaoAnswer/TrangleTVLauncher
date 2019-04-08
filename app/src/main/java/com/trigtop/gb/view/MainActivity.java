@@ -108,7 +108,7 @@ public class MainActivity extends Activity
     private ShortcutsAdapter mAdapter;
     private static final int MSG_ONE = 1;
     private static final int MSG_ZERO = 0;
-    public static final int columns = 11;
+    public static final int columns = 9;
     private String mCurrentCategory = Data.HOME;
     private WeatherReceiver mWeatherReceiver;
     private final String ADDITIONAL = "additional";
@@ -365,7 +365,7 @@ public class MainActivity extends Activity
                 showEditCityForWeatherDialog();
                 break;
             case R.id.view11://clean
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(new QuickenActivity());
                 break;
             case R.id.view://Apps
                 LaunchActivity(new AppActicity());
@@ -421,6 +421,7 @@ public class MainActivity extends Activity
     private void LaunchActivity(Activity activity) {
         Intent intent = new Intent(this, activity.getClass());
         startActivity(intent);
+        overridePendingTransition(R.anim.activity_down_in, R.anim.activity_down_out);
     }
 
     @Override
@@ -545,6 +546,7 @@ public class MainActivity extends Activity
 
     @SuppressLint("HandlerLeak")
     private Handler mUpdateWeatherHandler = new Handler() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -637,5 +639,10 @@ public class MainActivity extends Activity
                 initWeather();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();//注释父类方法，拦截回退键
     }
 }

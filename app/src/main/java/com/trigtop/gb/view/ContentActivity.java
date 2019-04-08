@@ -10,12 +10,14 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.trigtop.gb.R;
 import com.trigtop.gb.adapt.ShortcutsAdapter;
 import com.trigtop.gb.bean.Shortcut;
+import com.trigtop.gb.receiver.BroadcastReceiverListener;
 import com.trigtop.gb.util.AnimUtil;
 import com.trigtop.gb.util.DBHelper;
 import com.trigtop.gb.util.Data;
@@ -62,14 +64,15 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
     }
 
     @Override
-    public void onDestroy() {
-        unregisterReceiver(mUpdateShortcutsReceiver);
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        unregisterReceiver(mUpdateShortcutsReceiver);
+
+        super.onDestroy();
     }
 
     private void init() {
@@ -85,6 +88,7 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
         mAdapter = new ShortcutsAdapter(this, mShortcut, pm, true);
         gridViewTV.setAdapter(mAdapter);
         registerReceiver(mUpdateShortcutsReceiver, mIntentFilter);
+        setScreenListener();
     }
 
     @Override
@@ -207,5 +211,32 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_up_in, R.anim.activity_up_out);
+    }
+
+    private void setScreenListener() {
+        BroadcastReceiverListener screenListener = new BroadcastReceiverListener(ContentActivity.this);
+        screenListener.start(new BroadcastReceiverListener.ScreenStateListener() {
+            @Override
+            public void onScreenOn() {// 开屏
+            }
+            @Override
+            public void onScreenOff() {// 锁屏
+            }
+            @Override
+            public void onUserPresent() {// 解锁
+            }
+
+            @Override
+            public void onHome() {//home主页键
+                finish();
+                overridePendingTransition(R.anim.activity_up_in, R.anim.activity_up_out);
+            }
+        });
+    }
 
 }
