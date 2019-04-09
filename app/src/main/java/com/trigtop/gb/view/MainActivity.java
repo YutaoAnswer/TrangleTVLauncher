@@ -72,8 +72,6 @@ public class MainActivity extends Activity
     TextView tvTime;
     @BindView(R.id.tv_date)
     TextView tvDate;
-    //    @BindView(R.id.tv_recycler_view)
-//    TvRecyclerView tvRecyclerView;
     @BindView(R.id.view10)
     MetroItemFrameLayout view10;
     @BindView(R.id.view11)
@@ -100,6 +98,14 @@ public class MainActivity extends Activity
     MetroItemFrameLayout view8;
     @BindView(R.id.fragment_home_gridview)
     GridViewTV gridViewTV;
+    @BindView(R.id.title_weather_image)
+    ImageView titleWeatherImage;
+    @BindView(R.id.title_weather_city)
+    TextView titleWeatherCity;
+    @BindView(R.id.title_weather_temperature)
+    TextView titleWeatherTemperature;
+    @BindView(R.id.title_weather_info)
+    TextView titleWeatherInfo;
 
     private View mOldView;
     private PackageManager pm;
@@ -207,7 +213,7 @@ public class MainActivity extends Activity
             }
         }).start();
 
-        aaa = Util.getString(MainActivity.this, WeatherUtils.WEATHER_CITY);
+        city_name = Util.getString(MainActivity.this, WeatherUtils.WEATHER_CITY);
 
         setDateTimeWeek();
 
@@ -322,7 +328,6 @@ public class MainActivity extends Activity
     @SuppressLint("SetTextI18n")
     private void setDateTimeWeek() {
         String systemDate = DateUtil.getSystemDate();
-        Log.d(TAG, "setDateTimeWeek: " + systemDate);
         String[] strings1 = Objects.requireNonNull(systemDate).split("年");
         String[] strings2 = Objects.requireNonNull(strings1[1]).split("月");
         String[] strings3 = Objects.requireNonNull(strings2[1]).split("日");
@@ -360,39 +365,40 @@ public class MainActivity extends Activity
     @OnClick({R.id.view10, R.id.view11, R.id.view, R.id.view4, R.id.view2,
             R.id.view3, R.id.view5, R.id.view6, R.id.view12, R.id.view13, R.id.view7, R.id.view8})
     public void onViewClicked(View view) {
+        ContentActivity contentActivity = new ContentActivity();
         switch (view.getId()) {
             case R.id.view10://weather
                 showEditCityForWeatherDialog();
                 break;
             case R.id.view11://clean
-                LaunchActivity(new QuickenActivity());
+                LaunchActivity(new QuickenActivity(), null);
                 break;
             case R.id.view://Apps
-                LaunchActivity(new AppActicity());
+                LaunchActivity(new AppActicity(), null);
                 break;
             case R.id.view4://online_video
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(contentActivity, "online_video");
                 break;
             case R.id.view2://browser
-                LaunchActivity(new ContentActivity());
+                startThirdAppforPM(getResources().getString(R.string.browser_internet));
                 break;
             case R.id.view3://music
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(contentActivity, "music");
                 break;
             case R.id.view5://local_video
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(contentActivity, "local_video");
                 break;
             case R.id.view6://images
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(contentActivity, "images");
                 break;
             case R.id.view12://gone
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(contentActivity, "");
                 break;
             case R.id.view13://gone
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(contentActivity, "");
                 break;
             case R.id.view7://待定
-                LaunchActivity(new ContentActivity());
+                LaunchActivity(contentActivity,"");
                 break;
             case R.id.view8://setting
                 Intent settingIntent = new Intent();
@@ -418,8 +424,9 @@ public class MainActivity extends Activity
         }
     };
 
-    private void LaunchActivity(Activity activity) {
+    private void LaunchActivity(Activity activity, String category) {
         Intent intent = new Intent(this, activity.getClass());
+        intent.putExtra("category", category);
         startActivity(intent);
         overridePendingTransition(R.anim.activity_down_in, R.anim.activity_down_out);
     }
@@ -493,8 +500,7 @@ public class MainActivity extends Activity
         }
     }
 
-
-    String aaa = "";
+    String city_name = "";
 
     public void initWeather() {
         ConnectivityManager connManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -504,7 +510,7 @@ public class MainActivity extends Activity
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, aaa);
+                    WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, city_name);
                 }
             };
             try {
@@ -530,18 +536,14 @@ public class MainActivity extends Activity
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, aaa);
+                        WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, city_name);
                     }
                 }).start();
             }
         }
     }
 
-    private TextView weather_city1;
-    private TextView weather_info1;
-    private ImageView weather_image1;
     private static int mWeatherCode = 3200;
-    private TextView weathrer_temperature1;
     private static boolean GET_WEATHER_OK = false;
 
     @SuppressLint("HandlerLeak")
@@ -552,21 +554,21 @@ public class MainActivity extends Activity
             switch (msg.what) {
                 case WeatherUtils.MSG_WEATHER_OK_NEW: {
                     NewYahooWeather weatherInfo = (NewYahooWeather) msg.obj;
-                    if (weather_city1 != null && weather_image1 != null && weatherInfo != null) {
+                    if (titleWeatherCity != null && titleWeatherImage != null && weatherInfo != null) {
                         mWeatherCode = (int) weatherInfo.getCode();
                         int temp = (int) ((weatherInfo.getTemp() - 32) / 1.8);
-                        weathrer_temperature1.setText(temp + "ºC");
-                        weather_city1.setText(weatherInfo.getCity());
-                        weather_info1.setText(weatherInfo.getDesc());
-                        weathrer_temperature1.setVisibility(View.VISIBLE);
+                        titleWeatherTemperature.setText(temp + "ºC");
+                        titleWeatherCity.setText(weatherInfo.getCity());
+                        titleWeatherInfo.setText(weatherInfo.getDesc());
+                        titleWeatherTemperature.setVisibility(View.VISIBLE);
                         if (mWeatherCode >= 0 && mWeatherCode <= 47) {
-                            weather_image1.setImageResource(Data.getWeatherIcon(mWeatherCode));//设置通过weathercode设置已经在本地的天气图片
+                            titleWeatherImage.setImageResource(Data.getWeatherIcon(mWeatherCode));//设置通过weathercode设置已经在本地的天气图片
                         } else {
-                            weather_image1.setImageResource(R.mipmap.weather3200);
+                            titleWeatherImage.setImageResource(R.mipmap.weather3200);
                         }
                         GET_WEATHER_OK = true;
                     } else {
-                        if (weather_city1 != null && weather_image1 != null) {
+                        if (titleWeatherCity != null && titleWeatherImage != null) {
                             // weather_city1.setText("Sunny to cloudy");
                             //   weathrer_temperature1.setText("28");
                             //  weather_info1.setText("走到这里");
@@ -576,27 +578,28 @@ public class MainActivity extends Activity
                 }
                 break;
                 case WeatherUtils.MSG_WEATHER_NO_CITY: {
-                    if (weather_city1 != null) weather_city1.setText(R.string.weather_no_city);
+                    if (titleWeatherCity != null)
+                        titleWeatherCity.setText(R.string.weather_no_city);
                     //  Util.setString(getActivity(), WeatherUtils.WEATHER_CITY, "empty");
                     break;
                 }
                 case WeatherUtils.MSG_WEATHER_OK: {
                     WeatherInfo weatherInfo = (WeatherInfo) msg.obj;
-                    if (weather_city1 != null && weather_image1 != null && weatherInfo != null) {
+                    if (titleWeatherCity != null && titleWeatherImage != null && weatherInfo != null) {
                         mWeatherCode = weatherInfo.getCurrentCode();
                         int temp = (int) ((weatherInfo.getCurrentTemp() - 32) / 1.8);
-                        weathrer_temperature1.setText(temp + "ºC");
-                        weather_city1.setText(weatherInfo.getLocationCity());
-                        weather_info1.setText(weatherInfo.getCurrentText());
-                        weathrer_temperature1.setVisibility(View.VISIBLE);
+                        titleWeatherTemperature.setText(temp + "ºC");
+                        titleWeatherCity.setText(weatherInfo.getLocationCity());
+                        titleWeatherInfo.setText(weatherInfo.getCurrentText());
+                        titleWeatherTemperature.setVisibility(View.VISIBLE);
                         if (mWeatherCode >= 0 && mWeatherCode <= 47) {
-                            weather_image1.setImageResource(Data.getWeatherIcon(mWeatherCode));//设置通过weathercode设置已经在本地的天气图片
+                            titleWeatherImage.setImageResource(Data.getWeatherIcon(mWeatherCode));//设置通过weathercode设置已经在本地的天气图片
                         } else {
-                            weather_image1.setImageResource(R.mipmap.weather3200);
+                            titleWeatherImage.setImageResource(R.mipmap.weather3200);
                         }
                         GET_WEATHER_OK = true;
                     } else {
-                        if (weather_city1 != null && weather_image1 != null) {
+                        if (titleWeatherCity != null && titleWeatherImage != null) {
                             // weather_city1.setText("Sunny to cloudy");
                             //   weathrer_temperature1.setText("28");
                             //  weather_info1.setText("走到这里");
@@ -617,7 +620,7 @@ public class MainActivity extends Activity
             public void onClick(DialogInterface dialog, int which) {
                 String _location = editor.getText().toString();
                 if (!TextUtils.isEmpty(_location)) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) editor.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(editor.getWindowToken(), 0);
                     WeatherUtils.updateWeather(MainActivity.this, mUpdateWeatherHandler, _location);
                     Util.setString(MainActivity.this, WeatherUtils.WEATHER_CITY, _location);
@@ -644,5 +647,18 @@ public class MainActivity extends Activity
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();//注释父类方法，拦截回退键
+    }
+
+    /**
+     * 通过包名跳转
+     *
+     * @param pkg
+     */
+    private void startThirdAppforPM(String pkg) {
+        try {
+            startActivity(pm.getLaunchIntentForPackage(pkg));
+        } catch (Exception e) {
+            Toast.makeText(this, getResources().getString(R.string.noapp), Toast.LENGTH_SHORT).show();
+        }
     }
 }

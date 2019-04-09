@@ -24,24 +24,26 @@ import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 
 
 public class NewYahooWeatherHandler extends AsyncTask<Void, Void, NewYahooWeather> {
+
     private static final String TAG_WEATHER = "NewYahooWeatherHandler";
     private Handler mHandler;
     private String mCity;
+
     public NewYahooWeatherHandler(Handler handler, String city){
         this.mHandler = handler;
         this.mCity = city;
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         Log.i(TAG_WEATHER,"NewYahooWeatherHandler.onPreExecute() ");
-
     }
 
     @Override
     protected NewYahooWeather doInBackground(Void... arg0) {
         Log.i(TAG_WEATHER,"NewYahooWeatherHandler.doInBackground() city:" + mCity);
-        NewYahooWeather info = null;
+        NewYahooWeather info;
         String jsonStr = getWeatherJsonString();
 
         if (jsonStr != null) {
@@ -76,12 +78,10 @@ public class NewYahooWeatherHandler extends AsyncTask<Void, Void, NewYahooWeathe
                 Log.e(TAG_WEATHER, "Json parsing error: " + e.getMessage());
                 info = null;
             }
-
         } else {
             Log.e(TAG_WEATHER, "Couldn't get json from server.");
             info = null;
         }
-
         return info;
     }
 
@@ -93,21 +93,21 @@ public class NewYahooWeatherHandler extends AsyncTask<Void, Void, NewYahooWeathe
             msg.what = WeatherUtils.MSG_WEATHER_OK_NEW;
             msg.obj = result;
             mHandler.sendMessage(msg);
-
         }else{
             mHandler.sendEmptyMessage(WeatherUtils.MSG_WEATHER_FAILED);
         }
     }
 
-    private  String getWeatherJsonString(){
+    private String getWeatherJsonString(){
         String MY_CONSUMER_KEY = "dj0yJmk9RDZPWVVoRW94QzMxJmQ9WVdrOVpFZHRSR1ZhTkdNbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD0xZA--";
         String MY_CONSUMER_SECRET = "14e570834dc0dc15ad90bb164f8ba26f24d5b494";
         OAuthConsumer consumer = new CommonsHttpOAuthConsumer(MY_CONSUMER_KEY,
                 MY_CONSUMER_SECRET);
 
-        String result = null;
+        String result;
         StringBuilder sb = null;
         String line;
+
         try {
             HttpGet request = new HttpGet("https://weather-ydn-yql.media.yahoo.com/forecastrss?location=" + mCity + "&format=json");
             consumer.sign(request);

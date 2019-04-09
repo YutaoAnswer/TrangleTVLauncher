@@ -523,5 +523,6 @@
     <dimen name="d_400dp">400.00px</dimen>
 
     <dimen name="home_margin_between_text_and_image">5dp</dimen>
+    <dimen name="home_icon_padding_top">5dp</dimen>
 
 </resources>

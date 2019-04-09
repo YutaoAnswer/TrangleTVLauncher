@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -39,10 +38,10 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
     public static int columns = 9;
     private PackageManager pm;
     private boolean isSelect = false;
-//    private boolean isPaused = false;
+    //    private boolean isPaused = false;
     private ShortcutsAdapter mAdapter;
     private IntentFilter mIntentFilter;
-    private String mCurrentCategory = "photo";
+    private String mCurrentCategory;
     private float scale = 1.1f;
     private final String ADDITIONAL = "additional";
     private List<Shortcut> mShortcut = new ArrayList<>();
@@ -71,11 +70,12 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
     @Override
     public void onDestroy() {
         unregisterReceiver(mUpdateShortcutsReceiver);
-
         super.onDestroy();
     }
 
     private void init() {
+        mCurrentCategory = getIntent().getStringExtra("category");
+
         gridViewTV.setOnItemClickListener(new ItemClickListener());
         gridViewTV.setOnItemSelectedListener(this);
         gridViewTV.setOnFocusChangeListener(this);
@@ -115,7 +115,6 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
 //                    Log.i("bo", "gridview has focus");
                     new Thread(run).start();
                     break;
-
             }
         } else {
             switch (v.getId()) {
@@ -191,7 +190,7 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     if (isSelect) {
                         isSelect = false;
@@ -200,10 +199,10 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
                         // 如果是第一次进入该gridView，则进入第一个item，如果不是第一次进去，则选择上次出来的item
                         if (mOldView == null) {
                             mOldView = gridViewTV.getChildAt(0);
-                            if (mOldView != null){
+                            if (mOldView != null) {
                                 AnimUtil.setViewScale(mOldView, scale);
                             }
-                        }else {
+                        } else {
                             AnimUtil.setViewScale(mOldView, scale);
                         }
                     }
@@ -224,9 +223,11 @@ public class ContentActivity extends Activity implements AdapterView.OnItemSelec
             @Override
             public void onScreenOn() {// 开屏
             }
+
             @Override
             public void onScreenOff() {// 锁屏
             }
+
             @Override
             public void onUserPresent() {// 解锁
             }
