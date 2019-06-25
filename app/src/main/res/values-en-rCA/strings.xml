@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TVLauncher</string>
+    <string name="noapp">This app has not been installed yet!</string>
+    <string name="shortcut_out_of_range">Shortcuts out of range!</string>
+    <string name="weather_edit_city_dialog_not_empty">Make sure your input is correct!</string>
+    <string name="weather_edit_city_dialog_ok">OK</string>
+    <string name="weather_edit_city_dialog_tips">Input your city name</string>
+    <string name="weather_no_city">No City</string>
+</resources>

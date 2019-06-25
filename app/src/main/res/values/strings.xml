@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">TVSample</string>
-    <string name="setting_pkg">com.android.tv.settings</string>
-    <string name="setting_main_activity">com.android.tv.settings.MainSettings</string>
+    <string name="app_name">TVLauncher</string>
+    <string name="setting_pkg" translatable="false">com.android.tv.settings</string>
+    <string name="setting_main_activity" translatable="false">com.android.tv.settings.MainSettings</string>
     <string name="shortcut_out_of_range">Shortcuts out of range!</string>
 
     <!--weather-->
@@ -10,6 +10,6 @@
     <string name="weather_edit_city_dialog_ok">OK</string>
     <string name="weather_no_city">No City</string>
     <string name="noapp">This app has not been installed yet!</string>
-    <string name="browser_internet">com.android.chrome</string>
+    <string name="browser_internet" translatable="false">com.android.chrome</string>
 
 </resources>

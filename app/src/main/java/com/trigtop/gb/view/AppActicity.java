@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,6 +69,7 @@ public class AppActicity extends Activity implements AdapterView.OnItemLongClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app);
+
         bgThread.start();
         gv_shortcut_main = findViewById(R.id.gv_shortcut_main);
         scAdapter = new AppActivityAdapter(AppActicity.this, shortCutApps, R.layout.appactivity_item);

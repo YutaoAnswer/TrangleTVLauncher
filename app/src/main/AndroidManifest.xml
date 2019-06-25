@@ -47,9 +47,10 @@
             android:configChanges="keyboard|keyboardHidden|navigation|orientation"
             android:screenOrientation="landscape"
             android:theme="@style/transcutestyle" />
+
         <activity
             android:name=".view.EditorActivity"
-            android:theme="@style/dialogActivity" />
+            android:theme="@style/MyTransparent" />
 
         <meta-data
             android:name="db_version"

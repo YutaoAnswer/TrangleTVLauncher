@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TVLauncher</string>
+    <string name="noapp">该应用尚未安装！</string>
+    <string name="shortcut_out_of_range">应用列表超出边界啦！</string>
+    <string name="weather_edit_city_dialog_not_empty">确保您的输入是正确的</string>
+    <string name="weather_edit_city_dialog_ok">确定</string>
+    <string name="weather_edit_city_dialog_tips">输入你的用户城市</string>
+    <string name="weather_no_city">未设置城市</string>
+</resources>

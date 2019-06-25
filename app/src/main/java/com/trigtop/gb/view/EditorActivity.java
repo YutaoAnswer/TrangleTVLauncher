@@ -149,7 +149,6 @@ public class EditorActivity extends Activity implements AdapterView.OnItemSelect
         }
     }
 
-
     private float scale = new Float(1.1);
     private View mOldView;
     private boolean isSelect = false;

@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000">
+    android:layout_height="match_parent">
 
     <com.trigtop.gb.widget.GridViewTV
         android:id="@+id/all_apps_gridview"
@@ -16,6 +15,7 @@
         android:listSelector="@drawable/gridview_item_focus"
         android:padding="10dp"
         android:verticalSpacing="10dp" />
+
 
 
 </RelativeLayout>
